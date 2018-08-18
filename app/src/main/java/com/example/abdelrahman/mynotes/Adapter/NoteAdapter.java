@@ -44,7 +44,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         String noteContent = cursor.getString(cursor.getColumnIndex(NoteContract.NoteEntry.NOTE_COLUMN_NOTE));
         holder.title.setText(noteTitle);
         holder.content.setText(noteContent);
-        holder.itemView.getTag((int) id);
+        holder.itemView.setTag(id);
     }
 
     /**

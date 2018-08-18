@@ -42,13 +42,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        noteRecyclerView = findViewById(R.id.note_rv);
+
         noteDBHelper = new NoteHelper(this);
         sqLiteDatabase = noteDBHelper.getReadableDatabase();
         Cursor cursor = noteDBHelper.getAllNotes();
         noteAdapter = new NoteAdapter(this, cursor);
 
-        noteRecyclerView = new RecyclerView(this);
+        noteRecyclerView = findViewById(R.id.note_rv);
         layoutManager = new LinearLayoutManager(this);
         noteRecyclerView.setLayoutManager(layoutManager);
         noteRecyclerView.setAdapter(noteAdapter);
