@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.example.abdelrahman.mynotes.Adapter.NoteAdapter;
 import com.example.abdelrahman.mynotes.Data.Models.Note;
 import com.example.abdelrahman.mynotes.Data.SQLite.NoteHelper;
@@ -94,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
                 noteDBHelper.deleteNote(id);
                 // COMPLETED (10) call swapCursor on mAdapter passing in getAllGuests() as the argument
                 //update the list
-                noteAdapter.swapCursor(noteDBHelper.getAllNotes());
+                noteAdapter.notifyItemRemoved((int)id);
+//                noteAdapter.swapCursor(noteDBHelper.getAllNotes());
             }
 
             // Attach the ItemTouchHelper to the noteRecyclerView
@@ -110,9 +110,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    showNoteDialog(true, position);
+                    showNoteDialog(false, position);
                 } else {
-                    noteDBHelper.deleteNote(position);
+                    noteDBHelper.deleteNote((long) position);
+                    noteAdapter.notifyItemRemoved(position);
                 }
             }
         });
@@ -121,24 +122,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void showNoteDialog(final boolean newNote, final int position) {
         // Put not_dialog layout in View.
-        View view = LayoutInflater.from(this).inflate(R.layout.note_dialog, null);
-        final EditText title_et = view.findViewById(R.id.note_title_et);
-        final EditText content_et = view.findViewById(R.id.note_content_et);
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.note_dialog, null);
         // Initialize dialog.
-        AlertDialog.Builder noteDialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder noteDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         noteDialogBuilder.setView(view);// Set not_dialog layout as a dialog's view
         // Set title to the dialog
         TextView dialogTitle = view.findViewById(R.id.dialog_title);
-        dialogTitle.setText(newNote ? getString(R.string.new_note_title) : getString(R.string.edit_note_title));
+        dialogTitle.setText(!newNote ? getString(R.string.edit_note_title) : getString(R.string.new_note_title));
+
+        final EditText title_et = view.findViewById(R.id.note_title_et);
+        final EditText content_et = view.findViewById(R.id.note_content_et);
         //If the dialog for Update get the note data to update it.
         if (!newNote) {
             Note note = noteDBHelper.getNote(position);
-            title_et.setText(note.getTitle());
-            content_et.setText(note.getContent());
+            if (!(note == null)){
+            String content = note.getContent();
+            String title= note.getTitle();
+            title_et.setText(title);
+            content_et.setText(content);}
         }
 
-        noteDialogBuilder.setCancelable(false)
-                .setPositiveButton(newNote ? "Save" : "Update", new DialogInterface.OnClickListener() {
+        noteDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(!newNote ? "Update" : "Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -150,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                         dialogInterface.dismiss();
                     }
                 });
-        AlertDialog alertDialog = noteDialogBuilder.create();
+        final AlertDialog alertDialog = noteDialogBuilder.create();
         alertDialog.show();
 
         alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
@@ -160,22 +166,87 @@ public class MainActivity extends AppCompatActivity {
                 FUtilsValidation.isEmpty(title_et, "Enter Title!");
                 FUtilsValidation.isEmpty(content_et, "Note is Empty!");
 
-                if (!TextUtils.isEmpty(title_et.getText().toString()) ||
-                        !TextUtils.isEmpty(content_et.getText().toString())) {
+                if (TextUtils.isEmpty(title_et.getText().toString()) ||
+                        TextUtils.isEmpty(content_et.getText().toString())) {
+                    return;
+                }else {
+                    alertDialog.dismiss();
+                }
 
                     String noteTitle = title_et.getText().toString();
                     String noteContent = content_et.getText().toString();
-
                     Note note = new Note(noteTitle, noteContent);
+
                     if (newNote) {
                         long i = noteDBHelper.addNote(note);
+                        noteAdapter.swapCursor(noteDBHelper.getAllNotes());
                         Log.i(LOG_TAG,String.valueOf(i));
                     }
-                    if (!newNote) noteDBHelper.updateNote(note, position);
+                    if (!newNote) {
+                        noteDBHelper.updateNote(note, position);
+                        noteAdapter.notifyItemChanged(position);
+                    }
+
                 }
-            }
         });
     }
+
+
+
+//    private void showNoteDialog(final boolean shouldUpdate, final Note note, final int position) {
+//        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getApplicationContext());
+//        View view = layoutInflaterAndroid.inflate(R.layout.note_dialog, null);
+//
+//        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(MainActivity.this);
+//        alertDialogBuilderUserInput.setView(view);
+//
+//        final EditText inputNote = view.findViewById(R.id.note);
+//        TextView dialogTitle = view.findViewById(R.id.dialog_title);
+//        dialogTitle.setText(!shouldUpdate ? getString(R.string.lbl_new_note_title) : getString(R.string.lbl_edit_note_title));
+//
+//        if (shouldUpdate && note != null) {
+//            inputNote.setText(note.getNote());
+//        }
+//        alertDialogBuilderUserInput
+//                .setCancelable(false)
+//                .setPositiveButton(shouldUpdate ? "update" : "save", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialogBox, int id) {
+//
+//                    }
+//                })
+//                .setNegativeButton("cancel",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialogBox, int id) {
+//                                dialogBox.cancel();
+//                            }
+//                        });
+//
+//        final AlertDialog alertDialog = alertDialogBuilderUserInput.create();
+//        alertDialog.show();
+//
+//        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Show toast message when no text is entered
+//                if (TextUtils.isEmpty(inputNote.getText().toString())) {
+//                    Toast.makeText(MainActivity.this, "Enter note!", Toast.LENGTH_SHORT).show();
+//                    return;
+//                } else {
+//                    alertDialog.dismiss();
+//                }
+//
+//                // check if user updating note
+//                if (shouldUpdate && note != null) {
+//                    // update note by it's id
+//                    updateNote(inputNote.getText().toString(), position);
+//                } else {
+//                    // create new note
+//                    createNote(inputNote.getText().toString());
+//                }
+//            }
+//        });
+//    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

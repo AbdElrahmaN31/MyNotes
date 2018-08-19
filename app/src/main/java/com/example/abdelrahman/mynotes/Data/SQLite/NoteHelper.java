@@ -36,26 +36,26 @@ public class NoteHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);// reCreate Notes Database
     }
 
-    public long addNote(Note note){
+    public long addNote(Note note) {
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(NOTE_COLUMN_TITLE,note.getTitle());
-        contentValues.put(NOTE_COLUMN_NOTE,note.getContent());
+        contentValues.put(NOTE_COLUMN_TITLE, note.getTitle());
+        contentValues.put(NOTE_COLUMN_NOTE, note.getContent());
 
-        long i = sqLiteDatabase.insert(NOTE_TABLE_NAME,null,contentValues);
+        long i = sqLiteDatabase.insert(NOTE_TABLE_NAME, null, contentValues);
 
         sqLiteDatabase.close();
         return i;
     }
 
-    public void updateNote(Note note,int id){
+    public void updateNote(Note note, int id) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(NOTE_COLUMN_TITLE,note.getTitle());
-        contentValues.put(NOTE_COLUMN_NOTE,note.getContent());
+        contentValues.put(NOTE_COLUMN_TITLE, note.getTitle());
+        contentValues.put(NOTE_COLUMN_NOTE, note.getContent());
 
         sqLiteDatabase.update(NOTE_TABLE_NAME,
                 contentValues,
@@ -63,19 +63,24 @@ public class NoteHelper extends SQLiteOpenHelper {
                 null);
     }
 
-    public Note getNote(int id){
-        String select = "SELECT * FROM pets WHERE​ _id = " + id;
+    public Note getNote(int id) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(select,null);
-        String noteTilte = cursor.getString(cursor.getColumnIndex(NOTE_COLUMN_TITLE));
-        String noteContent = cursor.getString(cursor.getColumnIndex(NOTE_COLUMN_NOTE));
-        sqLiteDatabase.close();
-        cursor.close();
-        return new Note(noteTilte,noteContent);
+        Cursor cursor = null;
+        Note note = null;
+        cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + NOTE_TABLE_NAME + " WHERE " + NoteContract.NoteEntry._ID + "=" + id, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                String noteTitle = cursor.getString(cursor.getColumnIndex(NOTE_COLUMN_TITLE));
+                String noteContent = cursor.getString(cursor.getColumnIndex(NOTE_COLUMN_NOTE));
+                note = new Note(noteTitle, noteContent);
+            }
+            cursor.close();
+        }
+        return note;
     }
 
-    public Cursor getAllNotes(){
-        SQLiteDatabase sqLiteDatabase  = this.getReadableDatabase();
+    public Cursor getAllNotes() {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 //        String selectQuery = "SELECT * FROM " + NoteContract.NoteEntry.NOTE_TABLE_NAME;
 //       Cursor cursor = sqLiteDatabase.rawQuery(selectQuery, null);
 //       sqLiteDatabase.close();
@@ -91,9 +96,9 @@ public class NoteHelper extends SQLiteOpenHelper {
         );
     }
 
-    public void deleteNote(long id){
+    public void deleteNote(long id) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        sqLiteDatabase.delete(NOTE_TABLE_NAME, NoteContract.NoteEntry._ID + "=" + id,null);
+        sqLiteDatabase.delete(NOTE_TABLE_NAME, NoteContract.NoteEntry._ID + "=" + id, null);
         sqLiteDatabase.close();
     }
 
