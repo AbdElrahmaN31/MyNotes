@@ -2,7 +2,7 @@ package com.example.abdelrahman.mynotes.Data.Models;
 
 public class Note {
 
-    String title,content;
+    String title, content;
 
     public Note(String title, String content) {
         this.title = title;

@@ -65,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 NoteRecyclerTouchListener.ClickListener() {
                     @Override
                     public void onLongClick(View child, int childPosition) {
-                        showActionsDialog(childPosition);
+                        long id = (long) noteRecyclerView.getChildViewHolder(child).itemView.getTag();
+                        showActionsDialog((int)id);
                     }
 
                     @Override
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 noteDBHelper.deleteNote(id);
                 // COMPLETED (10) call swapCursor on mAdapter passing in getAllGuests() as the argument
                 //update the list
-                noteAdapter.notifyItemRemoved((int)id);
+                noteAdapter.swapCursor(noteDBHelper.getAllNotes());
 //                noteAdapter.swapCursor(noteDBHelper.getAllNotes());
             }
 
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     showNoteDialog(false, position);
                 } else {
                     noteDBHelper.deleteNote((long) position);
-                    noteAdapter.notifyItemRemoved(position);
+                    noteAdapter.swapCursor(noteDBHelper.getAllNotes());
                 }
             }
         });
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     if (!newNote) {
                         noteDBHelper.updateNote(note, position);
-                        noteAdapter.notifyItemChanged(position);
+                        noteAdapter.swapCursor(noteDBHelper.getAllNotes());
                     }
 
                 }

@@ -18,7 +18,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="My Note"/>
+            app:title="My Note" />
 
     </android.support.design.widget.AppBarLayout>
 

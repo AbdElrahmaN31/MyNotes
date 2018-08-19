@@ -65,7 +65,7 @@ public class NoteHelper extends SQLiteOpenHelper {
 
     public Note getNote(int id) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = null;
+        Cursor cursor;
         Note note = null;
         cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + NOTE_TABLE_NAME + " WHERE " + NoteContract.NoteEntry._ID + "=" + id, null);
         if (cursor != null) {
@@ -81,10 +81,6 @@ public class NoteHelper extends SQLiteOpenHelper {
 
     public Cursor getAllNotes() {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-//        String selectQuery = "SELECT * FROM " + NoteContract.NoteEntry.NOTE_TABLE_NAME;
-//       Cursor cursor = sqLiteDatabase.rawQuery(selectQuery, null);
-//       sqLiteDatabase.close();
-//       return cursor;
         return sqLiteDatabase.query(
                 NOTE_TABLE_NAME,
                 null,
@@ -99,7 +95,6 @@ public class NoteHelper extends SQLiteOpenHelper {
     public void deleteNote(long id) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.delete(NOTE_TABLE_NAME, NoteContract.NoteEntry._ID + "=" + id, null);
-        sqLiteDatabase.close();
     }
 
 }

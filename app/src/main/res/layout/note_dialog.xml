@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="8dp">
 
@@ -21,9 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:theme="@style/Theme.AppCompat"
-        app:hintTextAppearance="@android:style/TextAppearance.Medium"
-        android:textColorHint="@color/colorInputHint">
+        android:textColorHint="@color/colorInputHint"
+        android:theme="@style/Theme.AppCompat.Light">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/note_title_et"
@@ -36,8 +34,8 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.AppCompat"
-        android:textColorHint="@color/colorInputHint">
+        android:textColorHint="@color/colorInputHint"
+        android:theme="@style/Theme.AppCompat.Light">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/note_content_et"
