@@ -10,6 +10,7 @@ import com.example.abdelrahman.mynotes.Data.Models.Note;
 
 import static com.example.abdelrahman.mynotes.Data.SQLite.NoteContract.NoteEntry.CREATE_NOTES_TABLE;
 import static com.example.abdelrahman.mynotes.Data.SQLite.NoteContract.NoteEntry.NOTE_COLUMN_NOTE;
+import static com.example.abdelrahman.mynotes.Data.SQLite.NoteContract.NoteEntry.NOTE_COLUMN_TIME;
 import static com.example.abdelrahman.mynotes.Data.SQLite.NoteContract.NoteEntry.NOTE_COLUMN_TITLE;
 import static com.example.abdelrahman.mynotes.Data.SQLite.NoteContract.NoteEntry.NOTE_TABLE_NAME;
 
@@ -32,7 +33,7 @@ public class NoteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + String.valueOf(CREATE_NOTES_TABLE));
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + NOTE_TABLE_NAME);
         onCreate(sqLiteDatabase);// reCreate Notes Database
     }
 

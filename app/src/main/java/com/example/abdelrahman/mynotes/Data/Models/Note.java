@@ -2,7 +2,7 @@ package com.example.abdelrahman.mynotes.Data.Models;
 
 public class Note {
 
-    String title, content;
+    String title, content, time;
 
     public Note(String title, String content) {
         this.title = title;
@@ -23,5 +23,13 @@ public class Note {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

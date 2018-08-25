@@ -22,7 +22,7 @@ public class NoteContract {
                 NOTE_COLUMN_TITLE + " TEXT," +
                 NOTE_COLUMN_NOTE + " TEXT NOT NULL," +
                 NOTE_COLUMN_TYPE + " TEXT," +
-                NOTE_COLUMN_TIME + "TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                NOTE_COLUMN_TIME + " DATETIME DEFAULT CURRENT_TIMESTAMP" +
                 ");";
 
     }
