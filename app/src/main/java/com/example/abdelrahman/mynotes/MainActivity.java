@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showNoteDialog(final boolean newNote, final int position) {
         // Put not_dialog layout in View.
-        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.note_dialog, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.note_dialog, null);
         // Initialize dialog.
         AlertDialog.Builder noteDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         noteDialogBuilder.setView(view);// Set not_dialog layout as a dialog's view
